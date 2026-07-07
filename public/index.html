@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="TradeVault — CoinDCX INR Futures Trade Journal. Track your crypto P&L, deposits and withdrawals.">
+  <title>TradeVault | CoinDCX INR Futures</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Sidebar (Desktop) -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span>TradeVault</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-btn" data-tab="trades">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+          <span>History</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="user-badge">CoinDCX · INR Futures</span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="header-info">
+          <h1 id="page-title">Dashboard</h1>
+          <p id="page-subtitle">CoinDCX INR Futures Tracker</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-add-trade-desktop" id="btn-add-desktop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add Trade
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="view-section active">
+
+        <!-- Account Summary Row -->
+        <div class="account-banner">
+          <div class="account-banner-col">
+            <span class="ab-label">Total Deposited</span>
+            <span class="ab-value inr-green" id="stat-deposited">₹0</span>
+          </div>
+          <div class="account-banner-divider"></div>
+          <div class="account-banner-col">
+            <span class="ab-label">Total Withdrawn</span>
+            <span class="ab-value inr-red" id="stat-withdrawn">₹0</span>
+          </div>
+          <div class="account-banner-divider"></div>
+          <div class="account-banner-col">
+            <span class="ab-label">Account Balance</span>
+            <span class="ab-value inr-highlight" id="stat-balance">₹0</span>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <!-- Total P&L -->
+          <div class="stat-card pnl-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Total P&L</span>
+              <h2 class="stat-value" id="stat-total-pnl">₹0</h2>
+              <span class="stat-trend" id="stat-pnl-trend">0 trades</span>
+            </div>
+          </div>
+          <!-- Win Rate -->
+          <div class="stat-card">
+            <div class="stat-icon accent-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Win Rate</span>
+              <h2 class="stat-value" id="stat-win-rate">0%</h2>
+              <span class="stat-sub" id="stat-win-loss">0 W / 0 L</span>
+            </div>
+          </div>
+          <!-- Best Trade -->
+          <div class="stat-card">
+            <div class="stat-icon accent-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Best Trade</span>
+              <h2 class="stat-value text-green" id="stat-best">₹0</h2>
+              <span class="stat-sub" id="stat-best-coin">--</span>
+            </div>
+          </div>
+          <!-- Worst Trade -->
+          <div class="stat-card">
+            <div class="stat-icon accent-red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Worst Trade</span>
+              <h2 class="stat-value text-red" id="stat-worst">₹0</h2>
+              <span class="stat-sub" id="stat-worst-coin">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="chart-card line-chart-card">
+            <div class="chart-header">
+              <h3>Cumulative P&L (₹)</h3>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="chart-cumulative-pnl"></canvas>
+            </div>
+          </div>
+          <div class="chart-card pie-chart-card">
+            <div class="chart-header">
+              <h3>Profit vs Loss</h3>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="chart-pnl-distribution"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- History View -->
+      <section id="view-trades" class="view-section">
+        <!-- Filters -->
+        <div class="filters-container">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="filter-coin" placeholder="Search coin (e.g. BTC)...">
+          </div>
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="filter-type">Type</label>
+              <select id="filter-type">
+                <option value="">All</option>
+                <option value="Trade">Trades</option>
+                <option value="Deposit">Deposits</option>
+                <option value="Withdraw">Withdrawals</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-outcome">Outcome</label>
+              <select id="filter-outcome">
+                <option value="">All</option>
+                <option value="win">Profits</option>
+                <option value="loss">Losses</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-sort">Sort By</label>
+              <select id="filter-sort">
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+                <option value="pnl-desc">Highest P&L</option>
+                <option value="pnl-asc">Lowest P&L</option>
+              </select>
+            </div>
+          </div>
+          <div class="filters-actions">
+            <button class="btn btn-outline" id="btn-reset-filters">Reset</button>
+          </div>
+        </div>
+
+        <!-- Trade List -->
+        <div class="trades-list-wrapper">
+          <div id="trades-list-container" class="trades-list">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <p>No trades yet. Tap + to log your first trade!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Nav (Mobile) -->
+    <nav class="bottom-nav">
+      <button class="bottom-nav-btn active" data-tab="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="bottom-nav-btn" data-tab="trades">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        <span>History</span>
+      </button>
+    </nav>
+
+    <!-- FAB (Mobile) -->
+    <button class="fab" id="btn-fab" aria-label="Add Trade">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="trade-modal">
+      <div class="modal-card">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+          <h2 id="modal-title">Log Trade</h2>
+          <button class="btn-close" id="btn-close-modal" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="trade-form">
+            <input type="hidden" id="trade-id">
+
+            <!-- Type Selector -->
+            <div class="type-tabs" id="type-tabs">
+              <button type="button" class="type-tab active" data-type="Trade">📈 Trade</button>
+              <button type="button" class="type-tab" data-type="Deposit">💰 Deposit</button>
+              <button type="button" class="type-tab" data-type="Withdraw">🏧 Withdraw</button>
+            </div>
+            <input type="hidden" id="trade-type" value="Trade">
+
+            <!-- Date -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trade-date">Date & Time</label>
+                <input type="datetime-local" id="trade-date" required>
+              </div>
+            </div>
+
+            <!-- Coin Name (hidden for Deposit/Withdraw) -->
+            <div class="form-row" id="coin-row">
+              <div class="form-group">
+                <label for="trade-coin">Coin Name</label>
+                <input type="text" id="trade-coin" placeholder="e.g. BTC, ETH, SOL" autocomplete="off" autocapitalize="characters">
+              </div>
+            </div>
+
+            <!-- P&L / Amount -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trade-pnl" id="pnl-label">Profit / Loss (₹)</label>
+                <div class="pnl-input-wrap">
+                  <span class="inr-prefix">₹</span>
+                  <input type="number" id="trade-pnl" step="0.01" placeholder="0.00" required>
+                </div>
+                <span class="form-hint" id="pnl-hint">Positive for profit, negative for loss</span>
+              </div>
+            </div>
+
+            <!-- Quick P&L Buttons (Trade only) -->
+            <div id="quick-pnl-row" class="quick-pnl-row">
+              <button type="button" class="quick-btn loss" data-val="-500">-₹500</button>
+              <button type="button" class="quick-btn loss" data-val="-200">-₹200</button>
+              <button type="button" class="quick-btn profit" data-val="200">+₹200</button>
+              <button type="button" class="quick-btn profit" data-val="500">+₹500</button>
+              <button type="button" class="quick-btn profit" data-val="1000">+₹1K</button>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trade-notes">Notes (optional)</label>
+                <textarea id="trade-notes" rows="2" placeholder="e.g. Stop hit, TP1 reached..."></textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline" id="btn-cancel-modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-trade">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal-overlay confirm-modal-overlay" id="delete-modal">
+      <div class="modal-card confirm-card">
+        <div class="modal-header">
+          <h2>Delete Entry</h2>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this entry? This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="btn-cancel-delete">Cancel</button>
+          <button class="btn btn-danger" id="btn-confirm-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
