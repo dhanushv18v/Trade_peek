@@ -369,7 +369,7 @@ function renderTradesList() {
       <div class="trade-card-pnl">
         <span class="pnl-amount ${pnlClass}">${amountStr}</span>
       </div>
-      <button class="card-delete-btn" data-id="${trade._id}" title="Delete">
+      <button class="card-delete-btn" data-id="${trade.id}" title="Delete">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </button>
     `;
@@ -377,12 +377,12 @@ function renderTradesList() {
     // Click card = edit (but not delete btn)
     card.addEventListener('click', e => {
       if (e.target.closest('.card-delete-btn')) return;
-      openEditModal(trade._id);
+      openEditModal(trade.id);
     });
 
     card.querySelector('.card-delete-btn').addEventListener('click', e => {
       e.stopPropagation();
-      openDeleteModal(trade._id);
+      openDeleteModal(trade.id);
     });
 
     container.appendChild(card);
@@ -444,7 +444,7 @@ async function handleSubmit(e) {
 async function openEditModal(id) {
   try {
     const trade = await ApiService.getTrade(id);
-    inputId.value = trade._id;
+    inputId.value = trade.id;
 
     const d = new Date(trade.date);
     inputDate.value = new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
