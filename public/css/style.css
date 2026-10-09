@@ -1056,7 +1056,7 @@ input, select, textarea, button {
   .fab { display: none; }
 
   /* Content padding on desktop */
-  #view-dashboard, #view-trades {
+  #view-dashboard, #view-trades, #view-sessions {
     padding: 20px 24px 40px;
   }
 
@@ -1104,8 +1104,649 @@ input, select, textarea, button {
   }
 }
 
+
 @media (min-width: 1100px) {
   .stats-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* ============================================================
+   SESSIONS PAGE
+   ============================================================ */
+
+/* ── IST Live Clock Strip ───────────────────────────────────── */
+.ist-clock-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, hsla(260,60%,15%,0.92), hsla(222,28%,12%,0.92));
+  border: 1px solid hsla(260,85%,65%,0.35);
+  border-radius: var(--radius-card);
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 28px hsla(260,85%,55%,0.12), var(--shadow-md);
+}
+
+.ist-clock-strip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
+.ist-clock-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ist-clock-left svg {
+  width: 26px;
+  height: 26px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px hsla(260,85%,65%,0.6));
+}
+
+.ist-clock-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ist-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.ist-time {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ist-clock-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.ist-session-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.ist-active-session {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  transition: color 0.4s;
+}
+
+/* ── Session Cards Grid ─────────────────────────────────────── */
+.session-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.session-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  cursor: default;
+}
+
+.session-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+/* Per-session accent colours */
+#scard-sydney  { --sc: #a855f7; }
+#scard-sydney::before  { background: #a855f7; }
+#scard-tokyo   { --sc: #f97316; }
+#scard-tokyo::before   { background: #f97316; }
+#scard-london  { --sc: #00cfff; }
+#scard-london::before  { background: #00cfff; }
+#scard-newyork { --sc: #e63957; }
+#scard-newyork::before { background: #e63957; }
+
+.session-card--active { border-color: var(--sc); box-shadow: 0 0 0 1px var(--sc), 0 4px 24px hsla(0,0%,0%,0.35); transform: translateY(-2px); }
+.session-card--active::before { opacity: 1; }
+
+/* City background image cards */
+.session-card--bg {
+  background-size: cover;
+  background-position: center;
+}
+
+/* Dark gradient overlay so text stays readable over the photo */
+.session-card--bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(6,8,20,0.62) 0%,
+    rgba(6,8,20,0.75) 100%
+  );
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Ensure card content sits above the overlay */
+.session-card--bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+.session-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.session-flag-wrap {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.session-flag-wrap .flag-svg { width: 32px; height: 32px; display: none; }
+
+.session-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.session-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--text-primary);
+}
+
+.session-code {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Live pulse dot */
+.session-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+
+.dot--live {
+  background: var(--sc);
+  box-shadow: 0 0 0 0 var(--sc);
+  animation: dot-pulse 1.4s infinite;
+}
+
+@keyframes dot-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--sc) 60%, transparent); }
+  70%  { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.session-time-range {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+
+.session-timezone-note {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.session-volatility {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.vol-low       { background: hsla(262,80%,60%,0.18); color: #a855f7; border: 1px solid hsla(262,80%,60%,0.35); }
+.vol-moderate  { background: hsla(25,95%,55%,0.15);  color: #f97316; border: 1px solid hsla(25,95%,55%,0.35); }
+.vol-high      { background: hsla(195,100%,50%,0.12);color: #00cfff; border: 1px solid hsla(195,100%,50%,0.35); }
+.vol-very-high { background: hsla(351,78%,57%,0.15); color: #e63957; border: 1px solid hsla(351,78%,57%,0.35); }
+
+/* ── Session Block (shared container) ──────────────────────── */
+.session-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.session-block-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.session-block-header svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.session-block-header h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.block-tag {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Timeline ────────────────────────────────────────────────── */
+.timeline-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+/* Ruler wrapper: spacer + ruler so time labels align with track bars */
+.tl-ruler-row {
+  display: flex;
+  min-width: 560px;
+  margin-bottom: 6px;
+}
+
+/* Same width as .tl-label (118px) + .tl-row gap (10px) = 128px */
+.tl-ruler-spacer {
+  width: 128px;
+  flex-shrink: 0;
+}
+
+.timeline-ruler {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timeline-ruler span {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+}
+
+.timeline-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 560px;
+  position: relative; /* needed for spanning now-line */
+}
+
+.tl-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tl-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  width: 118px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tl-flag { font-size: 0.9rem; }
+
+.tl-track {
+  flex: 1;
+  position: relative;
+  height: 28px;
+  background: hsla(222,22%,18%,0.7);
+  border-radius: 6px;
+  overflow: hidden;
+  /* visual 5px gap at each side without breaking % positioning */
+  clip-path: inset(0 5px round 5px);
+}
+
+.tl-bar {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 1;
+}
+
+.tl-bar-wrap { z-index: 0; }
+
+.tl-sydney  { background: linear-gradient(90deg, #a855f7, #9333ea); }
+.tl-tokyo   { background: linear-gradient(90deg, #f97316, #ea580c); }
+.tl-london  { background: linear-gradient(90deg, #00cfff, #0ea5e9); }
+.tl-newyork { background: linear-gradient(90deg, #e63957, #be123c); color: #fff; }
+
+/* Combined block: single now-line spans timeline + chart */
+.session-block--combined {
+  position: relative;
+  overflow: visible;
+}
+
+/* Inner horizontal rule between timeline and chart sections */
+.session-inner-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 14px 0;
+}
+
+/* Now-line — spans the full height of .session-block--combined */
+.tl-now-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #facc15;
+  border-radius: 2px;
+  z-index: 20;
+  box-shadow: 0 0 10px #facc15, 0 0 3px #facc15;
+  pointer-events: none;
+}
+
+/* "NOW" label + ping indicator — real element, always inside the card */
+.now-indicator {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  /* top/left set by JS */
+}
+
+.now-label {
+  background: #facc15;
+  color: #000;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-main);
+  box-shadow: 0 0 10px rgba(250,204,21,0.75), 0 2px 6px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+
+.now-ping-wrap {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.now-ping-dot {
+  width: 10px;
+  height: 10px;
+  background: #facc15;
+  box-shadow: 0 0 8px #facc15;
+  position: relative;
+  z-index: 2;
+  transform: rotate(45deg);
+  border-radius: 2px;  /* diamond shape */
+  animation: now-diamond-pulse 1.8s ease-in-out infinite;
+}
+
+.now-ping-dot::before,
+.now-ping-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid rgba(250, 204, 21, 0.6);
+  border-radius: 3px;
+  animation: now-ring-pulse 1.8s ease-out infinite;
+}
+
+.now-ping-dot::after {
+  animation-delay: 0.7s;
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+@keyframes now-diamond-pulse {
+  0%, 100% { box-shadow: 0 0 6px #facc15, 0 0 12px rgba(250,204,21,0.4); }
+  50%       { box-shadow: 0 0 16px #facc15, 0 0 30px rgba(250,204,21,0.8); }
+}
+
+@keyframes now-ring-pulse {
+  0%   { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* "Current time" badge shown permanently at ruler level on the now-line */
+.now-time-badge {
+  position: absolute;
+  transform: translateX(-50%) translateY(-100%);
+  background: #facc15;
+  color: #000;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 0 8px rgba(250,204,21,0.6);
+  font-family: var(--font-main);
+  /* top/left set by JS */
+}
+
+/* ── Hover cursor: ghost line + time badge ───────────────────── */
+.tl-cursor-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255,255,255,0.18);
+  pointer-events: none;
+  display: none;
+  z-index: 8;
+  border-left: 1px dashed rgba(255,255,255,0.2);
+}
+
+.tl-cursor-badge {
+  position: absolute;
+  /* center horizontally, float ABOVE the ruler row */
+  transform: translateX(-50%) translateY(-100%);
+  background: hsla(222,28%,13%,0.96);
+  border: 1px solid hsl(260,85%,65%);
+  color: hsl(260,85%,75%);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  pointer-events: none;
+  display: none;
+  white-space: nowrap;
+  z-index: 25;
+  box-shadow: 0 0 10px hsla(260,85%,65%,0.35);
+  font-family: var(--font-main);
+}
+
+/* ── Volatility Chart ────────────────────────────────────────── */
+
+/* Row wrapper: y-axis column + chart column, mirrors the timeline row layout */
+.vol-row {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* HTML y-axis labels: same 128px width as the timeline label column */
+.vol-y-axis {
+  width: 128px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 6px 8px 16px 0;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: hsl(210,10%,46%);
+  font-family: var(--font-main);
+}
+
+.volatility-chart-wrap {
+  flex: 1;
+  position: relative;
+  height: 140px;
+  margin-bottom: 10px;
+}
+
+.volatility-chart-wrap canvas {
+  width: 100% !important;
+  height: 140px !important;
+}
+
+.vol-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.vol-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 3px;
+}
+
+/* ── Best Time Banner ────────────────────────────────────────── */
+.best-time-banner {
+  background: linear-gradient(135deg, hsla(48,95%,55%,0.12), hsla(35,95%,55%,0.08));
+  border: 1px solid hsla(48,95%,55%,0.4);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 20px hsla(48,95%,55%,0.08);
+}
+
+.best-time-star {
+  font-size: 1.8rem;
+  color: #facc15;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px #facc15);
+  line-height: 1;
+}
+
+.best-time-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.best-time-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #facc15;
+  text-transform: uppercase;
+}
+
+.best-time-range {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+}
+
+.best-time-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .session-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .ist-time { font-size: 1.85rem; }
+}
+
+@media (min-width: 900px) {
+  .tl-label { width: 130px; }
+}
+

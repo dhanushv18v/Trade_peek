@@ -1,7 +1,7 @@
 {
   "name": "tradevault",
   "version": "1.0.0",
-  "description": "TradeVault — CoinDCX INR Futures personal trade journal",
+  "description": "TradeVault — personal crypto futures trade journal",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

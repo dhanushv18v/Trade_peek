@@ -1,5 +1,5 @@
 /**
- * Apex Journal — CoinDCX INR Futures Tracker
+ * Apex Journal — Futures Trade Tracker
  * Main application controller
  */
 
@@ -11,7 +11,8 @@ let activeDeleteId = null;
 // ─── DOM Refs ─────────────────────────────────────────────────────────────────
 const views = {
   dashboard: document.getElementById('view-dashboard'),
-  trades:    document.getElementById('view-trades')
+  trades:    document.getElementById('view-trades'),
+  sessions:  document.getElementById('view-sessions')
 };
 
 const navBtns       = document.querySelectorAll('.nav-btn, .bottom-nav-btn');
@@ -78,8 +79,12 @@ function switchTab(tab) {
 
   if (tab === 'dashboard') {
     pageTitle.textContent = 'Dashboard';
-    pageSubtitle.textContent = 'CoinDCX INR Futures Tracker';
+    pageSubtitle.textContent = 'Futures Trade Tracker';
     renderDashboard();
+  } else if (tab === 'sessions') {
+    pageTitle.textContent = 'Sessions';
+    pageSubtitle.textContent = 'Live market session clock (IST)';
+    if (window.initSessionsPage) window.initSessionsPage();
   } else {
     pageTitle.textContent = 'Trade History';
     pageSubtitle.textContent = 'All transactions & trades';
@@ -160,7 +165,7 @@ function setTypeTab(type) {
     inputCoin.required = false;
     inputCoin.value = 'ACCOUNT';
     pnlLabel.textContent = 'Deposit Amount (₹)';
-    pnlHint.textContent = 'Enter the amount you deposited to CoinDCX';
+    pnlHint.textContent = 'Enter the amount you deposited to your account';
     quickPnlRow.style.display = 'none';
     // Force positive
     if (parseFloat(inputPnl.value) < 0) inputPnl.value = '';
@@ -169,7 +174,7 @@ function setTypeTab(type) {
     inputCoin.required = false;
     inputCoin.value = 'ACCOUNT';
     pnlLabel.textContent = 'Withdraw Amount (₹)';
-    pnlHint.textContent = 'Enter the amount you withdrew from CoinDCX';
+    pnlHint.textContent = 'Enter the amount you withdrew from your account';
     quickPnlRow.style.display = 'none';
   }
 }

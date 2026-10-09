@@ -1,5 +1,5 @@
 /**
- * Chart management module — CoinDCX INR Futures Journal
+ * Chart management module — Futures Trade Journal
  */
 let cumulativePnlChart = null;
 let pnlDistributionChart = null;

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="TradeVault — CoinDCX INR Futures Trade Journal. Track your crypto P&L, deposits and withdrawals.">
-  <title>TradeVault | CoinDCX INR Futures</title>
+  <meta name="description" content="TradeVault — Personal Trade Journal. Track your crypto P&L, deposits and withdrawals.">
+  <title>TradeVault | Trade Journal</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,9 +34,13 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
           <span>History</span>
         </button>
+        <button class="nav-btn" data-tab="sessions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Sessions</span>
+        </button>
       </nav>
       <div class="sidebar-footer">
-        <span class="user-badge">CoinDCX · INR Futures</span>
+        <span class="user-badge">Crypto Futures</span>
       </div>
     </aside>
 
@@ -47,7 +51,7 @@
       <header class="header">
         <div class="header-info">
           <h1 id="page-title">Dashboard</h1>
-          <p id="page-subtitle">CoinDCX INR Futures Tracker</p>
+          <p id="page-subtitle">Futures Trade Tracker</p>
         </div>
         <div class="header-actions">
           <button class="btn btn-primary btn-add-trade-desktop" id="btn-add-desktop">
@@ -148,6 +152,183 @@
 
       </section>
 
+      <!-- Sessions View -->
+      <section id="view-sessions" class="view-section">
+
+        <!-- Live IST Clock Strip -->
+        <div class="ist-clock-strip" id="ist-clock-strip">
+          <div class="ist-clock-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div class="ist-clock-text">
+              <span class="ist-label">INDIA STANDARD TIME</span>
+              <span class="ist-time" id="ist-time-display">--:--:-- --</span>
+            </div>
+          </div>
+          <div class="ist-clock-right">
+            <span class="ist-session-label">ACTIVE SESSION</span>
+            <span class="ist-active-session" id="ist-active-session">Detecting...</span>
+          </div>
+        </div>
+
+        <!-- Session Cards Grid -->
+        <div class="session-cards-grid">
+
+          <div class="session-card session-card--bg" id="scard-sydney" data-session="sydney" style="background-image:url('/img/sydney.jpg')">
+            <div class="session-card-top">
+              <div class="session-flag-wrap">
+                <svg class="flag-svg" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#00008B"/><polygon points="0,0 14,10 0,20" fill="#CC0001" opacity="0.6"/><text x="5" y="22" font-size="16">🇦🇺</text></svg>
+              </div>
+              <div class="session-card-meta">
+                <span class="session-name">SYDNEY</span>
+                <span class="session-code">(SYD)</span>
+              </div>
+              <div class="session-live-dot" id="dot-sydney"></div>
+            </div>
+            <div class="session-time-range">3:30 AM – 12:30 PM</div>
+            <div class="session-timezone-note">(IST)</div>
+            <div class="session-volatility vol-low">Low – Moderate</div>
+          </div>
+
+          <div class="session-card session-card--bg" id="scard-tokyo" data-session="tokyo" style="background-image:url('/img/tokyo.jpg')">
+            <div class="session-card-top">
+              <div class="session-flag-wrap"><text>🇯🇵</text></div>
+              <div class="session-card-meta">
+                <span class="session-name">TOKYO</span>
+                <span class="session-code">(TYO)</span>
+              </div>
+              <div class="session-live-dot" id="dot-tokyo"></div>
+            </div>
+            <div class="session-time-range">4:30 AM – 1:30 PM</div>
+            <div class="session-timezone-note">(IST)</div>
+            <div class="session-volatility vol-moderate">Moderate</div>
+          </div>
+
+          <div class="session-card session-card--bg" id="scard-london" data-session="london" style="background-image:url('/img/london.jpg')">
+            <div class="session-card-top">
+              <div class="session-flag-wrap"><text>🇬🇧</text></div>
+              <div class="session-card-meta">
+                <span class="session-name">LONDON</span>
+                <span class="session-code">(LDN)</span>
+              </div>
+              <div class="session-live-dot" id="dot-london"></div>
+            </div>
+            <div class="session-time-range">12:30 PM – 9:30 PM</div>
+            <div class="session-timezone-note">(IST)</div>
+            <div class="session-volatility vol-high">High</div>
+          </div>
+
+          <div class="session-card session-card--bg" id="scard-newyork" data-session="newyork" style="background-image:url('/img/newyork.jpg')">
+            <div class="session-card-top">
+              <div class="session-flag-wrap"><text>🇺🇸</text></div>
+              <div class="session-card-meta">
+                <span class="session-name">NEW YORK</span>
+                <span class="session-code">(NY)</span>
+              </div>
+              <div class="session-live-dot" id="dot-newyork"></div>
+            </div>
+            <div class="session-time-range">6:30 PM – 3:30 AM</div>
+            <div class="session-timezone-note">(IST) Next day</div>
+            <div class="session-volatility vol-very-high">Very High</div>
+          </div>
+
+        </div>
+
+        <!-- Session Timeline + Volatility (combined so the now-line is unbroken) -->
+        <div class="session-block session-block--combined" id="session-combined-block">
+
+          <!-- Timeline header -->
+          <div class="session-block-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h3>SESSION TIMELINE <span class="block-tag">(IST)</span></h3>
+          </div>
+          <div class="timeline-wrapper">
+            <!-- Spacer row: ruler offset to match label column -->
+            <div class="tl-ruler-row">
+              <div class="tl-ruler-spacer"></div>
+              <div class="timeline-ruler">
+                <span>12 AM</span><span>2 AM</span><span>4 AM</span><span>6 AM</span><span>8 AM</span>
+                <span>10 AM</span><span>12 PM</span><span>2 PM</span><span>4 PM</span><span>6 PM</span>
+                <span>8 PM</span><span>10 PM</span><span>12 AM</span>
+              </div>
+            </div>
+            <div class="timeline-rows" id="timeline-rows">
+              <!-- Sydney: 3:30 AM–12:30 PM -->
+              <div class="tl-row">
+                <div class="tl-label"><span class="tl-flag">🇦🇺</span> Sydney (SYD)</div>
+                <div class="tl-track">
+                  <div class="tl-bar tl-sydney" style="left:14.58%;width:37.5%"><span>3:30 AM – 12:30 PM</span></div>
+                </div>
+              </div>
+              <!-- Tokyo: 4:30 AM–1:30 PM -->
+              <div class="tl-row">
+                <div class="tl-label"><span class="tl-flag">🇯🇵</span> Tokyo (TYO)</div>
+                <div class="tl-track">
+                  <div class="tl-bar tl-tokyo" style="left:18.75%;width:37.5%"><span>4:30 AM – 1:30 PM</span></div>
+                </div>
+              </div>
+              <!-- London: 12:30 PM–9:30 PM -->
+              <div class="tl-row">
+                <div class="tl-label"><span class="tl-flag">🇬🇧</span> London (LDN)</div>
+                <div class="tl-track">
+                  <div class="tl-bar tl-london" style="left:52.08%;width:37.5%"><span>12:30 PM – 9:30 PM</span></div>
+                </div>
+              </div>
+              <!-- New York: 6:30 PM–3:30 AM + wrap -->
+              <div class="tl-row">
+                <div class="tl-label"><span class="tl-flag">🇺🇸</span> New York (NY)</div>
+                <div class="tl-track">
+                  <div class="tl-bar tl-newyork" style="left:77.08%;width:22.92%"><span>6:30 PM – 3:30 AM (Next day)</span></div>
+                  <div class="tl-bar tl-newyork tl-bar-wrap" style="left:0%;width:14.58%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inner divider between timeline and chart -->
+          <div class="session-inner-divider"></div>
+
+          <!-- Volatility header -->
+          <div class="session-block-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <h3>MARKET VOLATILITY <span class="block-tag">(IST)</span></h3>
+          </div>
+          <!-- Chart row: y-axis spacer on left aligns chart with session bars -->
+          <div class="vol-row">
+            <div class="vol-y-axis">
+              <span>High</span>
+              <span>Moderate</span>
+              <span>Low</span>
+            </div>
+            <div class="volatility-chart-wrap">
+              <canvas id="volatility-chart" height="140"></canvas>
+            </div>
+          </div>
+          <div class="vol-legend">
+            <span class="vol-dot" style="background:#e63957"></span> Very High
+            <span class="vol-dot" style="background:#00cfff"></span> High
+            <span class="vol-dot" style="background:#f7a336"></span> Moderate
+            <span class="vol-dot" style="background:#22d27f"></span> Low
+          </div>
+
+          <!-- Single spanning now-line + floating indicator + now-time badge -->
+          <div class="tl-now-line" id="tl-now-line"></div>
+          <div class="now-indicator" id="now-indicator" aria-hidden="true">
+            <span class="now-label">NOW</span>
+            <div class="now-ping-wrap">
+              <div class="now-ping-dot"></div>
+            </div>
+          </div>
+          <!-- Current time shown at ruler level on the now-line -->
+          <div class="now-time-badge" id="now-time-badge"></div>
+
+          <!-- Hover cursor: ghost line + time badge -->
+          <div class="tl-cursor-line" id="tl-cursor-line"></div>
+          <div class="tl-cursor-badge" id="tl-cursor-badge"></div>
+
+        </div>
+
+      </section>
+
       <!-- History View -->
       <section id="view-trades" class="view-section">
         <!-- Filters -->
@@ -211,6 +392,10 @@
       <button class="bottom-nav-btn" data-tab="trades">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
         <span>History</span>
+      </button>
+      <button class="bottom-nav-btn" data-tab="sessions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Sessions</span>
       </button>
     </nav>
 
@@ -322,6 +507,7 @@
   <!-- App Scripts -->
   <script src="js/api.js"></script>
   <script src="js/charts.js"></script>
+  <script src="js/sessions.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
