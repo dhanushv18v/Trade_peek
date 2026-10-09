@@ -139,10 +139,13 @@ let sessionsInited = false;
 window.initSessionsPage = function () {
   if (!sessionsInited) {
     buildVolatilityChart();
-    initHoverCursor();   // set up hover time cursor once
+    initHoverCursor();
+    window.addEventListener('resize', tick);
+    // Live clock — update every second
+    setInterval(tick, 1000);
     sessionsInited = true;
   }
-  tick(); // single static render — no live updates
+  tick();
 };
 
 // ── Tick: updates clock + active session state ────────────────────────────────
@@ -189,41 +192,34 @@ function tick() {
     if (dot)  dot.classList.toggle('dot--live', active);
   });
 
-  // ── Now-line + indicator + time badge positioning ─────────────
+  // ── Now-line + unified indicator positioning ──────────────────
   const nowPct    = minutesToPercent(mins + secs / 60); // 0..100
   const combined  = document.getElementById('session-combined-block');
   const nowLine   = document.getElementById('tl-now-line');
   const indicator = document.getElementById('now-indicator');
-  const nowTimeBadge = document.getElementById('now-time-badge');
+  const timeInline = document.getElementById('now-time-inline');
 
   if (combined) {
     const firstTrack = combined.querySelector('.tl-track');
     const rulerRow   = combined.querySelector('.tl-ruler-row');
-    if (firstTrack) {
+    if (firstTrack && rulerRow) {
       const blockRect = combined.getBoundingClientRect();
       const trackRect = firstTrack.getBoundingClientRect();
-      // xPx = position of current time; subtract 1 so 2px-wide line is centered
+      const rulerTop  = rulerRow.getBoundingClientRect().top - blockRect.top;
+
+      // Center the 2px line on xPx (subtract 1)
       const xPx = (trackRect.left - blockRect.left) + (nowPct / 100) * trackRect.width - 1;
 
       if (nowLine) nowLine.style.left = xPx + 'px';
 
-      if (indicator && rulerRow) {
-        // center indicator on the line (+1 for the 1px correction above)
-        indicator.style.left = (xPx + 1) + 'px';
-        // Anchor indicator bottom to just above the ruler row
-        const rulerTop = rulerRow.getBoundingClientRect().top - blockRect.top;
-        indicator.style.top = Math.max(6, rulerTop - 32) + 'px';
-      }
+      // Inline time label inside indicator
+      if (timeInline) timeInline.textContent = `${h}:${mm} ${ampm}`;
 
-      // Now-time badge: positioned at ruler row top, centered on line
-      // CSS translateY(-100%) floats it just above the ruler labels
-      if (nowTimeBadge && rulerRow) {
-        const rulerTop = rulerRow.getBoundingClientRect().top - blockRect.top;
-        nowTimeBadge.textContent = timeStr.replace(/:\d\d /, ' ').trim(); // "h:MM AM" without seconds
-        // actually keep it short: just h:MM AM
-        nowTimeBadge.textContent = `${h}:${mm} ${ampm}`;
-        nowTimeBadge.style.left = (xPx + 1) + 'px';
-        nowTimeBadge.style.top  = rulerTop + 'px';
+      if (indicator) {
+        indicator.style.left = (xPx + 1) + 'px';
+        // Indicator height ~32px (time label + gap + diamond);
+        // position bottom 18px above ruler so rings never cover ruler labels
+        indicator.style.top = Math.max(4, rulerTop - 50) + 'px';
       }
     }
   }

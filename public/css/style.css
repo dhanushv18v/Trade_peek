@@ -49,6 +49,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ── Themed scrollbars ─────────────────────────────────────────── */
+::-webkit-scrollbar            { width: 5px; height: 5px; }
+::-webkit-scrollbar-track      { background: hsl(222,28%,5%); }
+::-webkit-scrollbar-thumb      { background: hsl(222,28%,20%); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover{ background: hsl(260,85%,60%); }
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: hsl(222,28%,20%) hsl(222,28%,5%); }
+
 html {
   scroll-behavior: smooth;
 }
@@ -1583,23 +1591,20 @@ input, select, textarea, button {
   100% { transform: scale(2.4); opacity: 0; }
 }
 
-/* "Current time" badge shown permanently at ruler level on the now-line */
-.now-time-badge {
-  position: absolute;
-  transform: translateX(-50%) translateY(-100%);
-  background: #facc15;
-  color: #000;
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  pointer-events: none;
+/* Time label inside the indicator — between NOW pill and diamond */
+.now-time-inline {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #facc15;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(250,204,21,0.35);
+  padding: 1px 6px;
+  border-radius: 3px;
   white-space: nowrap;
-  z-index: 26;
-  box-shadow: 0 0 8px rgba(250,204,21,0.6);
   font-family: var(--font-main);
-  /* top/left set by JS */
+  text-align: center;
+  line-height: 1.6;
 }
 
 /* ── Hover cursor: ghost line + time badge ───────────────────── */
